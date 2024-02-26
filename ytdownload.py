@@ -1,37 +1,33 @@
 from pytube import YouTube
 
-def download_video(link):
+def download_media(link, download_type):
     youtubeObject = YouTube(link)
-    youtubeObject = youtubeObject.streams.get_highest_resolution()
-   
+
+    if download_type == 'v':
+        youtubeObject = youtubeObject.streams.get_highest_resolution()
+
+    elif download_type == 'a':
+        youtubeObject = youtubeObject.streams.filter(only_audio=True).first()
+
     try:
         youtubeObject.download()
+        print("Download is completed successfully")
 
-    except:
-        print("Error")
-    print("Download is completed successfully")
+    except Exception as e:
+        print("Error:", e)
 
-def download_audio(link):
-    youtubeObject = YouTube(link)
-    youtubeObject = youtubeObject.streams.filter(only_audio=True).first()
-   
-    try:
-        youtubeObject.download()
-
-    except:
-        print("Error")
-    print("Download is completed successfully")
 
 
 def main():
     link = input("Enter the YouTube link: ")
-    choose = input("Enter v for video / a for audio: ")
+    choose = input("Enter v for video / a for audio: ").lower()
 
     if choose == "v":
-        download_video(link)
-
+        download_media(link, 'v')
     elif choose == "a":
-        download_audio(link)
+        download_media(link, 'a')
+    else:
+        print("Invalid choice")
 
 if __name__ == "__main__":
     main()
